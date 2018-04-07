@@ -1,0 +1,11 @@
+set(ARCH "mips")
+set(ABI "mips")
+set(HEADER "mipsel-linux-android")
+set(TOOLCHAIN_DIR ${CMAKE_CURRENT_LIST_DIR}/../../standalone_toolchains/${ARCH}/24/)
+
+set(CMAKE_SYSTEM_NAME Android)
+set(CMAKE_ANDROID_STANDALONE_TOOLCHAIN ${TOOLCHAIN_DIR})
+set(CMAKE_ANDROID_ARCH_ABI ${ABI})
+set(CMAKE_C_COMPILER ${TOOLCHAIN_DIR}/bin/${HEADER}-gcc)
+set(CMAKE_CXX_COMPILER ${TOOLCHAIN_DIR}/bin/${HEADER}-g++)
+set(CMAKE_Fortran_COMPILER ${TOOLCHAIN_DIR}/bin/${HEADER}-gfortran)
