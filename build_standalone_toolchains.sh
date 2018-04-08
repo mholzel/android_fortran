@@ -59,7 +59,7 @@ for HEADER in "${HEADERS[@]}" ; do
     if [ ! -f ${ARCHIVES}/${HEADER}-4.9-partial.7z ] ; then
 
         echo -e "${colored}Downloading the partial toolchain ${HEADER}${normal}" && echo
-        wget https://github.com/jeti/android_fortran/releases/download/partial_toolchains/${HEADER}-4.9-partial.7z -P ${ARCHIVES}
+        wget https://github.com/jeti/android_fortran/releases/download/toolchains/${HEADER}-4.9-partial.7z -P ${ARCHIVES}
         echo -e "${colored}Downloaded the partial toolchain ${HEADER}${normal}" && echo
     fi
     
