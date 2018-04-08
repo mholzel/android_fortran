@@ -52,36 +52,31 @@ if [ ! -d ${NDK} ]; then
     
 fi
 
-# Get the partial toolchains 
-for HEADER in "${HEADERS[@]}" ; do
-
-    # If we don't have the compressed partial toochain, download it  
-    if [ ! -f ${ARCHIVES}/${HEADER}-4.9-partial.7z ] ; then
-
-        echo -e "${colored}Downloading the partial toolchain ${HEADER}${normal}" && echo
-        wget https://github.com/jeti/android_fortran/releases/download/toolchains/${HEADER}-4.9-partial.7z -P ${ARCHIVES}
-        echo -e "${colored}Downloaded the partial toolchain ${HEADER}${normal}" && echo
-    fi
-    
-    # Now unpack the new version, overwriting any existing files 
-    echo -e "${colored}Unpacking the partial toolchain ${HEADER} into the ndk distribution${normal}" && echo
-    TOOLCHAIN=${NDK}/toolchains/${HEADER}-4.9/prebuilt
-    echo -e "${colored}Unpacking the partial toolchain ${HEADER}${normal}" && echo
-    7z x ${ARCHIVES}/${HEADER}-4.9-partial.7z -o${TOOLCHAIN} -aoa > 7z.log
-    rm 7z.log
-    echo -e "${colored}Unpacked the partial toolchain ${HEADER} into the ndk distribution${normal}" && echo
-    
-done
-
-# Finally, we build the standalone toolchains
-for SYSTEM in "${SYSTEMS[@]}" ; do
+# Finally, build the standalone toolchains
+for (( i=0; i<${N_SYSTEMS}; i++ )) ; do 
 
     # If we don't have it, create the toolchain
-    TOOLCHAIN=$BASE/standalone_toolchains/${SYSTEM}/${API}
+    TOOLCHAIN=$BASE/standalone_toolchains/${SYSTEMS[$i]}/${API}
     if [ ! -d ${TOOLCHAIN} ]; then
+    
+        # If we don't have the compressed partial toolchain, download it  
+        if [ ! -f ${ARCHIVES}/${HEADERS[$i]}-4.9-partial.7z ] ; then
 
-        echo -e "${colored}Creating the standalone toolchain for system=${SYSTEM}, api=${API}${normal}" && echo
-        ${NDK}/build/tools/make_standalone_toolchain.py --arch ${SYSTEM} --api ${API} --install-dir ${TOOLCHAIN}
+            echo -e "${colored}Downloading the partial toolchain ${HEADERS[$i]}${normal}" && echo
+            wget https://github.com/jeti/android_fortran/releases/download/toolchains/${HEADERS[$i]}-4.9-partial.7z -P ${ARCHIVES}
+            echo -e "${colored}Downloaded the partial toolchain ${HEADERS[$i]}${normal}" && echo
+        fi
+        
+        # Now unpack the new version, overwriting any existing files 
+        echo -e "${colored}Unpacking the partial toolchain ${HEADERS[$i]} into the ndk distribution${normal}" && echo
+        PARTIAL=${NDK}/toolchains/${HEADERS[$i]}-4.9/prebuilt
+        7z x ${ARCHIVES}/${HEADERS[$i]}-4.9-partial.7z -o${PARTIAL} -aoa > 7z.log
+        rm 7z.log
+        echo -e "${colored}Unpacked the partial toolchain ${HEADERS[$i]} into the ndk distribution${normal}" && echo
+
+        # Now create the standalone toolchain
+        echo -e "${colored}Creating the standalone toolchain for system=${SYSTEMS[$i]}, api=${API}${normal}" && echo
+        ${NDK}/build/tools/make_standalone_toolchain.py --arch ${SYSTEMS[$i]} --api ${API} --install-dir ${TOOLCHAIN}
     fi
     
 done
@@ -92,8 +87,8 @@ for (( i=0; i<${N_SYSTEMS}; i++ )) ; do
     if [ ! -f ${ARCHIVES}/${HEADERS[$i]}-4.9.7z ] ; then
 
         TOOLCHAIN=$BASE/standalone_toolchains/${SYSTEMS[$i]}/${API}
-        echo -e "${colored}Compressing the standalone toolchain ${HEADERS[$i]}. This can take a very long time. Here is a dot for every 100th unpacked file:${normal}" && echo 
-        7z a -t7z ${ARCHIVES}/${HEADERS[$i]}-4.9.7z -m0=lzma2 -mx=9 -aoa ${TOOLCHAIN} | awk 'BEGIN {ORS=" "} {if(NR%100==0)print "."}'
+        echo -e "${colored}Compressing the standalone toolchain ${HEADERS[$i]}. This can take a very long time. Here is a dot for every 100th compressed file:${normal}" && echo 
+        7z a -t7z ${ARCHIVES}/${HEADERS[$i]}-4.9.7z -m0=lzma2 -mx=9 -aoa "${TOOLCHAIN}/*" | awk 'BEGIN {ORS=" "} {if(NR%100==0)print "."}'
         echo ""
     fi
 done
