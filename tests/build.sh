@@ -1,3 +1,4 @@
+API=24
 declare -a LANGUAGES=("c" "cpp" "f")
 declare -a SYSTEMS=("arm64" 
                     "arm" 
@@ -17,7 +18,7 @@ for LANGUAGE in "${LANGUAGES[@]}" ; do
         echo -e "${colored}Building ${LANGUAGE} for ${SYSTEM}${normal}" && echo
         mkdir -p ${BASE}/${LANGUAGE}/build/${SYSTEM}
         cd ${BASE}/${LANGUAGE}/build/${SYSTEM}
-        cmake ../.. -DCMAKE_TOOLCHAIN_FILE=../../../toolchains/${SYSTEM}.cmake
+        cmake ../.. -DTOOLCHAIN_DIR=${BASE}/../standalone_toolchains/${SYSTEM}/${API} -DCMAKE_TOOLCHAIN_FILE=../../../toolchains/${SYSTEM}.cmake
         make 
     
     done

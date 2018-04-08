@@ -1,8 +1,6 @@
 set(ARCH "x86")
 set(ABI "x86")
 set(HEADER "i686-linux-android")
-set(TOOLCHAIN_DIR ${CMAKE_CURRENT_LIST_DIR}/../../standalone_toolchains/${ARCH}/24/)
-
 set(CMAKE_SYSTEM_NAME Android)
 set(CMAKE_ANDROID_STANDALONE_TOOLCHAIN ${TOOLCHAIN_DIR})
 set(CMAKE_ANDROID_ARCH_ABI ${ABI})
