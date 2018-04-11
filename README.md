@@ -7,7 +7,9 @@ This repo contains a script that can be used to build standalone toolchains for 
 - `mips`
 - `mips64`
 
-The resulting toolchains will be created in a `standalone_toolchains` folder, and these toolchains will be compressed and put into the `archives` folder for portability. 
+We have prebuilt these full standalone toochains, and put them in the [`release tab`](https://github.com/jeti/android_fortran/releases) so that you don't actually have to run this build script (which can take a very long time).
+
+However, if you do want to build the toolchains from scratch, then the resulting toolchains will be created in a `standalone_toolchains` folder, and these toolchains will be compressed and put into the `archives` folder for portability. 
 
 There are two other important features of this repo:
 
